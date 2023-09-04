@@ -1,18 +1,18 @@
 {
-  "name": "p7",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "npx tailwindcss -i ./src/styles/style.css -o ./dist/output.css --watch",
-    "dev": "npm start"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "prettier": "3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.4",
-    "tailwindcss": "^3.3.3"
-  }
+	"name": "p7",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "npx tailwindcss -i ./src/styles/style.css -o ./dist/output.css --watch",
+		"dev": "npm start"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"prettier": "^3.0.3",
+		"prettier-plugin-tailwindcss": "^0.5.4",
+		"tailwindcss": "^3.3.3"
+	}
 }
