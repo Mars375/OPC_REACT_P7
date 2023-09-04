@@ -12,11 +12,12 @@ export class Dropdown {
   // Create the dropdown element and its options
   createDropdown() {
     this.$dropdown = createEl('div', {
-      class: 'w-48',
+      class: 'w-48 relative',
       dataset: {
         dropdown: this._sortType,
       },
     });
+    this.$dropdown.classList.add('w-48');
 
     this.$dropdownButton = createEl('button', {
       class: 'dropdown__button',
@@ -26,7 +27,7 @@ export class Dropdown {
     });
 
     this.$dropdownList = createEl('ul', {
-      class: 'hidden',
+      class: 'hidden w-full bg-white z-10',
       dataset: {
         dropdownList: this._sortType,
       },
@@ -34,8 +35,9 @@ export class Dropdown {
 
     this.$dropdownButton.innerText = this._sortType;
 
-    this.$dropdown.append(this.$dropdownButton, this.$dropdownList);
+    this.handleDropdownButtonClick();
 
+    this.$dropdown.append(this.$dropdownButton, this.$dropdownList);
     this.$container.append(this.$dropdown);
 
     this.createDropdownOptions();
@@ -54,6 +56,25 @@ export class Dropdown {
       $option.innerText = option;
 
       this.$dropdownList.append($option);
+    });
+  }
+
+  // handle the dropdown button click event
+  handleDropdownButtonClick() {
+    this.$dropdownButton.addEventListener('click', () => {
+      this.$dropdownList.classList.toggle('hidden');
+    });
+  }
+
+  // handle the dropdown option click event
+  handleDropdownOptionClick() {
+    this.$dropdownList.addEventListener('click', (event) => {
+      const $target = event.target;
+
+      if ($target.tagName === 'LI') {
+        this.$dropdownButton.innerText = $target.innerText;
+        this.$dropdownList.classList.add('hidden');
+      }
     });
   }
 }
