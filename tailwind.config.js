@@ -3,10 +3,13 @@ module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     fontFamily: {
-      sans: ["Anton", "Manrope", "sans-serif"],
+      anton: ["Anton", "sans-serif"],
+      sans: ["Manrope", "sans-serif"],
+    },
+    fontSize: {
+      "5xl": "2.75rem",
     },
     extend: {},
   },
   plugins: [],
-}
-
+};
