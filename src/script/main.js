@@ -1,4 +1,5 @@
 import { Query } from "./helpers/query.js";
+import { Loader } from "./components/Loader.js";
 import { renderDropdowns } from "./utils/renderDropdowns.js";
 import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
 import { renderCards } from "./utils/renderCards.js";
@@ -9,10 +10,10 @@ class App {
     this.ingredients = [];
     this.appliances = [];
     this.ustensils = [];
-    this.dropdownContainer = document.querySelector("#dropdowns-container");
-    this.totalRecipes = document.querySelector("#total-recipes");
-    this.tagsContainer = document.querySelector("#tags-container");
-    this.cardsContainer = document.querySelector("#cards-container");
+    this.$dropdownContainer = document.querySelector("#dropdowns-container");
+    this.$totalRecipes = document.querySelector("#total-recipes");
+    this.$tagsContainer = document.querySelector("#tags-container");
+    this.$cardsContainer = document.querySelector("#cards-container");
     this.init();
   }
 
@@ -30,10 +31,14 @@ class App {
 
 
   renderPage() {
-    renderDropdowns(this.dropdownContainer, this.ingredients, this.appliances, this.ustensils);
-    renderTotalRecipes(this.recipes.length, this.totalRecipes);
-    renderCards(this.recipes, this.cardsContainer);
     // this.renderTags();
+    renderDropdowns(this.$dropdownContainer, this.ingredients, this.appliances, this.ustensils);
+    renderTotalRecipes(this.recipes.length, this.$totalRecipes);
+    renderCards(this.recipes, this.$cardsContainer);
+
+    setTimeout(() => {
+      Loader.hide();
+    }, 1500);
   }
 
 }

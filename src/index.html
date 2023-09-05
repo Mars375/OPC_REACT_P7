@@ -8,13 +8,12 @@
       href="https://fonts.googleapis.com/css2?family=Anton:wght@400;600;700&family=Manrope:wght@400;600;700&display=swap"
     />
     <link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-			integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
-			crossorigin="anonymous"
-			referrerpolicy="no-referrer"
-		/>
-	</head>
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link href="../dist/output.css" rel="stylesheet" />
     <title>Les petits plats</title>
   </head>
@@ -27,13 +26,11 @@
 
       <!-- Hero -->
       <div
-        class="flex justify-center items-center w-full h-[40rem] bg-[url('../src/assets/img/hero.png')] bg-no-repeat bg-cover bg-center"
+        class="flex h-[40rem] w-full items-center justify-center bg-[url('../src/assets/img/hero.png')] bg-cover bg-center bg-no-repeat"
       >
-        <div
-          class="text-center"
-        >
+        <div class="text-center">
           <h1
-            class="mx-auto mb-8 w-[55rem] font-anton text-5xl uppercase text-[#FFD15B] h-"
+            class="h- mx-auto mb-8 w-[55rem] font-anton text-5xl uppercase text-[#FFD15B]"
           >
             Cherchez parmi plus de 1500 recettes du quotidien, simples et
             délicieuses
@@ -60,16 +57,39 @@
         </div>
       </div>
     </header>
-    <main class="bg-[#EDEDED] px-24 pb-32">
-      <section
-        id="recipes-infos"
-        class="center flex items-center justify-between"
-      >
-        <div id="dropdowns-container" class="flex gap-16 my-6"></div>
-        <div id="total-recipes"></div>
-      </section>
-      <section id="tags-container"></section>
-      <section id="cards-container" class="flex flex-wrap gap-12"></section>
+    <main class="relative bg-[#EDEDED] px-24 pb-32">
+      <div id="skeleton-container">
+        <div class="flex gap-16 py-6">
+          <div
+            class="relative h-14 w-48 animate-pulse rounded-md bg-gray-400 p-4"
+          ></div>
+          <div
+            class="relative h-14 w-48 animate-pulse rounded-md bg-gray-400 p-4"
+          ></div>
+          <div
+            class="relative h-14 w-48 animate-pulse rounded-md bg-gray-400 p-4"
+          ></div>
+        </div>
+        <div class="flex flex-wrap gap-12">
+          <div class="h-[45rem] w-96 rounded-md bg-gray-400"></div>
+          <div class="h-[45rem] w-96 rounded-md bg-gray-400"></div>
+          <div class="h-[45rem] w-96 rounded-md bg-gray-400"></div>
+        </div>
+      </div>
+      <div id="main-container" class="hidden">
+        <section
+          id="recipes-infos"
+          class="center flex items-center justify-between"
+        >
+          <div id="dropdowns-container" class="my-6 flex gap-16"></div>
+          <div id="total-recipes"></div>
+        </section>
+        <section id="tags-container"></section>
+        <section
+          id="cards-container"
+          class="round flex flex-wrap gap-12"
+        ></section>
+      </div>
     </main>
     <script type="module" src="./script/main.js" defer></script>
   </body>

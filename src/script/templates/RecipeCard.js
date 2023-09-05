@@ -3,7 +3,6 @@ import { createEl } from "../utils/createEl.js";
 export class RecipeCard {
   constructor(recipe) {
     this._recipe = recipe;
-    console.log(this._recipe);
 
     this.createCard();
   }
