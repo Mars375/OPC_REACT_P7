@@ -8,7 +8,10 @@ export const renderDropdowns = (dropdownContainer, ingredients, appliances, uste
   ];
 
   const dropdowns = dropdownData.map(dropdown => {
-    return new Dropdown(dropdown.data, dropdownContainer, dropdown.label);
+    const dropdownComponent = new Dropdown(dropdown.data, dropdown.label);
+    dropdownContainer.appendChild(dropdownComponent.$dropdown);
+
+    return dropdownComponent;
   });
 
   return dropdowns;

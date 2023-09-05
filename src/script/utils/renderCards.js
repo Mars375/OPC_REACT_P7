@@ -1,9 +1,14 @@
-import { RecipeCard } from "../templates/RecipeCard.js"
+import { RecipeCard } from "../components/RecipeCard.js"
 
 export const renderCards = (cards, container) => {
   container.innerHTML = "";
-  cards.forEach(card => {
-    const recipeCard = new RecipeCard(card);
-    container.appendChild(recipeCard.render());
+
+  const cardsComponent = cards.map(card => {
+    const cardComponent = new RecipeCard(card);
+    container.appendChild(cardComponent.$card);
+
+    return cardComponent;
   });
+
+  return cardsComponent;
 }

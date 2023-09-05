@@ -1,9 +1,9 @@
 import { createEl } from "../utils/createEl.js";
 import { createSVG } from "../utils/createSVG.js";
+import { renderTags } from "../utils/renderTags.js";
 
 export class Dropdown {
-  constructor(optionsData, containerElement, sortType) {
-    this.$container = containerElement;
+  constructor(optionsData, sortType) {
     this._optionsData = optionsData;
     this._sortType = sortType;
 
@@ -57,12 +57,11 @@ export class Dropdown {
     this.$dropdownList.append(this.$dropdownListSearchContainer);
     this.$dropdownButton.append(this.$dropdownButtonIcon);
     this.$dropdown.append(this.$dropdownButton, this.$dropdownList);
-    this.$container.append(this.$dropdown);
-
 
     this.createDropdownOptions();
-
     this.handleDropdownButtonClick();
+
+    return this.$dropdown;
   }
 
   // Create the dropdown options
@@ -77,6 +76,7 @@ export class Dropdown {
 
       $option.innerText = option;
 
+      this.handleOptionClick($option);
       this.$dropdownList.append($option);
     });
   }
@@ -85,6 +85,20 @@ export class Dropdown {
   handleDropdownButtonClick() {
     this.$dropdownButton.addEventListener('click', () => {
       this.$dropdownList.classList.toggle('hidden');
+    });
+
+    //close dropdown list when click outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest(`[data-dropdown="${this._sortType}"]`)) {
+        this.$dropdownList.classList.add('hidden');
+      }
+    });
+  }
+
+  // handle option click event
+  handleOptionClick(option) {
+    option.addEventListener('click', () => {
+      renderTags(option.innerText);
     });
   }
 }

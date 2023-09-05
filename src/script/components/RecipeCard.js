@@ -91,9 +91,7 @@ export class RecipeCard {
     this.$cardBody.append(this.$cardTitle, this.$cardRecipeInfos);
     this.$cardImgContainer.append(this.$cardImg);
     this.$card.append(this.$cardImgContainer, this.$cardBody);
-  }
 
-  render() {
     return this.$card;
   }
 }

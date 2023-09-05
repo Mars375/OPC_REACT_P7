@@ -11,7 +11,6 @@ module.exports = {
       './src/script/models/*.{html, js}',
       './src/script/utils/*.{html, js}',
       './src/index.html',
-      './src/script/utils/renderTotalRecipes.js',
     ],
   },
   theme: {
