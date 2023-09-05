@@ -11,6 +11,9 @@ export class Tags {
     this.$tags = createEl("div",
       {
         class: "bg-[#FFD15B] flex items-center justify-center gap-8 rounded-md p-4 mb-6",
+        dataset: {
+          tag: this.tagOption
+        }
       })
 
     this.$tagsText = createEl("p",

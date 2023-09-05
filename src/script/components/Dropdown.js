@@ -6,6 +6,7 @@ export class Dropdown {
   constructor(optionsData, sortType) {
     this._optionsData = optionsData;
     this._sortType = sortType;
+    this._selectedOptions = [];
 
     this.createDropdown();
   }
@@ -13,14 +14,14 @@ export class Dropdown {
   // Create the dropdown element and its options
   createDropdown() {
     this.$dropdown = createEl('div', {
-      class: 'w-48 relative bg-white rounded-md p-4',
+      class: 'w-48 relative bg-white rounded-md',
       dataset: {
         dropdown: this._sortType,
       },
     });
 
     this.$dropdownButton = createEl('button', {
-      class: 'flex items-center justify-between w-full',
+      class: 'flex items-center justify-between w-full p-4',
       dataset: {
         dropdownButton: this._sortType,
       },
@@ -31,7 +32,7 @@ export class Dropdown {
     });
 
     this.$dropdownList = createEl('ul', {
-      class: 'absolute right-0 top-12 bg-white rounded-md w-full h-80 overflow-y-auto hidden z-10 p-4 ',
+      class: 'absolute right-0 top-12 bg-white rounded-md w-full max-h-80 overflow-y-auto hidden z-10 p-4 ',
       dataset: {
         dropdownList: this._sortType,
       },
@@ -48,16 +49,29 @@ export class Dropdown {
       },
     });
 
+    this.$dropdownListSearchIconContainer = createEl('div', {
+      class: 'absolute right-1 top-1/2 transform -translate-y-1/2 flex items-center',
+    });
+
     this.$dropdownListSearchIcon = createSVG('#7A7A7A');
-    this.$dropdownListSearchIcon.classList.add('absolute', 'right-0', 'top-1/2', '-translate-x-1/2', '-translate-y-1/2', 'w-4', 'h-4');
+    this.$dropdownListSearchIcon.classList.add('w-4', 'h-4', 'cursor-pointer');
+
+    this.$dropdownListSearchCloseIcon = createEl('i', {
+      class: 'fas fa-times text-[#7A7A7A] text-sm cursor-pointer mr-2',
+    });
+
+
 
     this.$dropdownButton.innerText = this._sortType;
 
-    this.$dropdownListSearchContainer.append(this.$dropdownListSearch, this.$dropdownListSearchIcon);
+    this.$dropdownListSearchIconContainer.append(this.$dropdownListSearchCloseIcon, this.$dropdownListSearchIcon);
+    this.$dropdownListSearchContainer.append(this.$dropdownListSearch, this.$dropdownListSearchIconContainer);
     this.$dropdownList.append(this.$dropdownListSearchContainer);
     this.$dropdownButton.append(this.$dropdownButtonIcon);
     this.$dropdown.append(this.$dropdownButton, this.$dropdownList);
 
+    this.handleSearch();
+    this.handleClearSearch();
     this.createDropdownOptions();
     this.handleDropdownButtonClick();
 
@@ -72,9 +86,8 @@ export class Dropdown {
         dataset: {
           dropdownOption: this._sortType,
         },
+        innerText: option,
       });
-
-      $option.innerText = option;
 
       this.handleOptionClick($option);
       this.$dropdownList.append($option);
@@ -98,7 +111,49 @@ export class Dropdown {
   // handle option click event
   handleOptionClick(option) {
     option.addEventListener('click', () => {
+      if (this._selectedOptions.includes(option.innerText)) return;
+
+      this._selectedOptions.push(option.innerText);
+      this.$dropdownListSearchContainer.insertAdjacentElement('afterend', option);
+      option.classList.add('bg-[#FFD15B]', 'font-bold', 'flex', 'justify-between', 'items-center');
+      // create close icon and place it at the end of the option
+      const $closeIcon = createEl('i', {
+        class: 'fas fa-circle-xmark cursor-pointer ',
+      });
+      option.append($closeIcon);
+
+      $closeIcon.addEventListener('click', () =>
+        this.handleOptionCloseIconClick(option)
+      );
       renderTags(option.innerText);
+    });
+  }
+
+  handleOptionCloseIconClick(option) {
+  }
+
+  // handle search event
+  handleSearch() {
+    this.$dropdownListSearch.addEventListener('input', () => {
+      const searchValue = this.$dropdownListSearch.value.toLowerCase();
+
+      this.$dropdownList.querySelectorAll('li').forEach((option) => {
+        if (option.innerText.toLowerCase().includes(searchValue)) {
+          option.classList.remove('hidden');
+        } else {
+          option.classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  // handle clear search event
+  handleClearSearch() {
+    this.$dropdownListSearchCloseIcon.addEventListener('click', () => {
+      this.$dropdownListSearch.value = '';
+      this.$dropdownList.querySelectorAll('li').forEach((option) => {
+        option.classList.remove('hidden');
+      });
     });
   }
 }

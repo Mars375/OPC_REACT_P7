@@ -3,7 +3,6 @@ import { Loader } from "./components/Loader.js";
 import { renderDropdowns } from "./utils/renderDropdowns.js";
 import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
 import { renderCards } from "./utils/renderCards.js";
-import { searchRecipes } from "./utils/searchRecipes.js";
 
 class App {
   constructor() {
@@ -22,7 +21,6 @@ class App {
   async init() {
     await this.getData();
     this.renderPage();
-    searchRecipes(this.$searchInput, this.$searchButton, this.$cardsContainer);
   }
 
   async getData() {
