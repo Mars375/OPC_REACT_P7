@@ -1,5 +1,7 @@
 import { Query } from "./helpers/query.js";
-import { Dropdown } from "./components/Dropdown.js";
+import { renderDropdowns } from "./utils/renderDropdowns.js";
+import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
+import { renderCards } from "./utils/renderCards.js";
 
 class App {
   constructor() {
@@ -28,24 +30,12 @@ class App {
 
 
   renderPage() {
-    this.renderDropdown();
-    // this.renderCards();
+    renderDropdowns(this.dropdownContainer, this.ingredients, this.appliances, this.ustensils);
+    renderTotalRecipes(this.recipes.length, this.totalRecipes);
+    renderCards(this.recipes, this.cardsContainer);
     // this.renderTags();
   }
 
-  renderDropdown() {
-    const dropdownData = [
-      { data: this.ingredients, label: "Ingredients" },
-      { data: this.appliances, label: "Appareils" },
-      { data: this.ustensils, label: "Ustensiles" }
-    ];
-
-    const dropdowns = dropdownData.map(dropdown => {
-      return new Dropdown(dropdown.data, this.dropdownContainer, dropdown.label);
-    });
-
-    this.dropdowns = dropdowns;
-  }
 }
 
 new App();

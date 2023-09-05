@@ -27,13 +27,13 @@
 
       <!-- Hero -->
       <div
-        class="flex justify-center items-center w-screen h-[40rem] bg-[url('../src/assets/img/hero.png')] bg-no-repeat bg-cover bg-center"
+        class="flex justify-center items-center w-full h-[40rem] bg-[url('../src/assets/img/hero.png')] bg-no-repeat bg-cover bg-center"
       >
         <div
           class="text-center"
         >
           <h1
-            class="mx-auto mb-8 w-[55rem] font-anton text-5xl uppercase text-[#FFD15B]"
+            class="mx-auto mb-8 w-[55rem] font-anton text-5xl uppercase text-[#FFD15B] h-"
           >
             Cherchez parmi plus de 1500 recettes du quotidien, simples et
             délicieuses
@@ -60,7 +60,7 @@
         </div>
       </div>
     </header>
-    <main class="py bg-[#EDEDED] px-24 pb-32">
+    <main class="bg-[#EDEDED] px-24 pb-32">
       <section
         id="recipes-infos"
         class="center flex items-center justify-between"
@@ -69,7 +69,7 @@
         <div id="total-recipes"></div>
       </section>
       <section id="tags-container"></section>
-      <section id="cards-container"></section>
+      <section id="cards-container" class="flex flex-wrap gap-12"></section>
     </main>
     <script type="module" src="./script/main.js" defer></script>
   </body>

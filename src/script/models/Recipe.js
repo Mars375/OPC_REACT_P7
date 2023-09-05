@@ -25,7 +25,7 @@ export class Recipe {
 
   get ingredientsList() {
     return this._recipe.ingredients.map((ingredient) => {
-      return ingredient.ingredient;
+      return ingredient;
     });
   }
 
