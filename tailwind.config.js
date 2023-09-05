@@ -5,13 +5,12 @@ module.exports = {
 
     files: [
       './src/**/*.js',
-      './src/**/*.{html, js}',
       './src/script/**/*.{html, js}',
       './src/script/components/*.{html, js}',
       './src/script/helpers/*.{html, js}',
       './src/script/models/*.{html, js}',
       './src/script/utils/*.{html, js}',
-      './src/index.html'
+      './src/index.html',
     ],
   },
   theme: {
@@ -22,7 +21,9 @@ module.exports = {
     fontSize: {
       "5xl": "2.75rem",
     },
-    extend: {},
+
+    extend: {
+    },
   },
   plugins: [],
 };

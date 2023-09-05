@@ -7,6 +7,14 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Anton:wght@400;600;700&family=Manrope:wght@400;600;700&display=swap"
     />
+    <link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+			integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+	</head>
     <link href="../dist/output.css" rel="stylesheet" />
     <title>Les petits plats</title>
   </head>
@@ -19,15 +27,10 @@
 
       <!-- Hero -->
       <div
-        class="d-flex justify-content-center align-items-center relative top-0 -z-10"
+        class="flex justify-center items-center w-screen h-[40rem] bg-[url('../src/assets/img/hero.png')] bg-no-repeat bg-cover bg-center"
       >
-        <img
-          src="assets/img/hero.png"
-          alt="Image du hero"
-          class="img-fluid w-100"
-        />
         <div
-          class="container absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-center"
+          class="text-center"
         >
           <h1
             class="mx-auto mb-8 w-[55rem] font-anton text-5xl uppercase text-[#FFD15B]"
@@ -35,7 +38,7 @@
             Cherchez parmi plus de 1500 recettes du quotidien, simples et
             délicieuses
           </h1>
-          <nav class="relative mx-auto w-2/3">
+          <nav class="relative">
             <input
               type="text"
               id="searchInput"
@@ -57,12 +60,12 @@
         </div>
       </div>
     </header>
-    <main class="bg-[#EDEDED]">
+    <main class="py bg-[#EDEDED] px-24 pb-32">
       <section
         id="recipes-infos"
         class="center flex items-center justify-between"
       >
-        <div id="dropdowns-container" class="flex"></div>
+        <div id="dropdowns-container" class="flex gap-16 my-6"></div>
         <div id="total-recipes"></div>
       </section>
       <section id="tags-container"></section>
