@@ -3,6 +3,7 @@ import { Loader } from "./components/Loader.js";
 import { renderDropdowns } from "./utils/renderDropdowns.js";
 import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
 import { renderCards } from "./utils/renderCards.js";
+import { searchRecipes } from "./utils/searchRecipes.js";
 
 class App {
   constructor() {
@@ -10,9 +11,10 @@ class App {
     this.ingredients = [];
     this.appliances = [];
     this.ustensils = [];
+    this.$searchInput = document.querySelector("#search-input");
+    this.$searchButton = document.querySelector("#search-button");
     this.$dropdownContainer = document.querySelector("#dropdowns-container");
     this.$totalRecipes = document.querySelector("#total-recipes");
-    this.$tagsContainer = document.querySelector("#tags-container");
     this.$cardsContainer = document.querySelector("#cards-container");
     this.init();
   }
@@ -20,6 +22,7 @@ class App {
   async init() {
     await this.getData();
     this.renderPage();
+    searchRecipes(this.$searchInput, this.$searchButton, this.$cardsContainer);
   }
 
   async getData() {
@@ -29,9 +32,7 @@ class App {
     this.ustensils = await Query.getUstensils();
   }
 
-
   renderPage() {
-    // this.renderTags();
     renderDropdowns(this.$dropdownContainer, this.ingredients, this.appliances, this.ustensils);
     renderTotalRecipes(this.recipes.length, this.$totalRecipes);
     renderCards(this.recipes, this.$cardsContainer);
