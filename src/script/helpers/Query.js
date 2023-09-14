@@ -11,22 +11,6 @@ export class Query {
     return recipes;
   }
 
-  static async getRecipeByKeyword(keyword) {
-    const recipes = await DataService.fetchData();
-
-    const filteredRecipes = recipes.filter(recipe => {
-      const recipeTitle = recipe.name.toLowerCase();
-      const recipeDescription = recipe.description.toLowerCase();
-      const recipeIngredients = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase()).join(' ');
-      const recipeAppliance = recipe.appliance.toLowerCase();
-      const recipeUstensils = recipe.ustensils.map(ustensil => ustensil.toLowerCase()).join(' ');
-
-      return recipeTitle.includes(keyword) || recipeDescription.includes(keyword) || recipeIngredients.includes(keyword) || recipeAppliance.includes(keyword) || recipeUstensils.includes(keyword);
-    });
-
-    return filteredRecipes;
-  }
-
   static async getIngredients() {
     const recipes = await DataService.fetchData();
 
