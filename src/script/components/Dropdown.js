@@ -1,6 +1,7 @@
 import { createEl } from "../utils/createEl.js";
 import { createSVG } from "../utils/createSVG.js";
 import { renderTags } from "../utils/renderTags.js";
+import { Tags } from "./Tags.js";
 
 export class Dropdown {
   constructor(optionsData, sortType) {
@@ -60,8 +61,6 @@ export class Dropdown {
       class: 'fas fa-times text-[#7A7A7A] text-sm cursor-pointer mr-2',
     });
 
-
-
     this.$dropdownButton.innerText = this._sortType;
 
     this.$dropdownListSearchIconContainer.append(this.$dropdownListSearchCloseIcon, this.$dropdownListSearchIcon);
@@ -114,22 +113,36 @@ export class Dropdown {
       if (this._selectedOptions.includes(option.innerText)) return;
 
       this._selectedOptions.push(option.innerText);
-      this.$dropdownListSearchContainer.insertAdjacentElement('afterend', option);
-      option.classList.add('bg-[#FFD15B]', 'font-bold', 'flex', 'justify-between', 'items-center');
-      // create close icon and place it at the end of the option
+
+      const optionClicked = createEl('li', {
+        class: 'p-[0.81rem] text-sm bg-[#FFD15B] font-bold flex justify-between items-center',
+        dataset: {
+          dropdownOption: this._sortType
+        },
+        innerText: option.innerText
+      })
+      option.style.display = 'none';
       const $closeIcon = createEl('i', {
         class: 'fas fa-circle-xmark cursor-pointer ',
       });
-      option.append($closeIcon);
+      optionClicked.append($closeIcon);
+      this.$dropdownListSearchContainer.insertAdjacentElement('afterend', optionClicked);
 
-      $closeIcon.addEventListener('click', () =>
-        this.handleOptionCloseIconClick(option)
+      $closeIcon.addEventListener('click', (e) =>
+        this.handleOptionCloseIconClick(option, optionClicked)
       );
-      renderTags(option.innerText);
+      renderTags(optionClicked.innerText);
     });
   }
 
-  handleOptionCloseIconClick(option) {
+  handleOptionCloseIconClick(option, optionClicked) {
+    optionClicked.addEventListener('click', (e) => e.stopPropagation());
+    this._selectedOptions = this._selectedOptions.filter((selectedOption) => selectedOption !== option.innerText);
+    optionClicked.remove()
+    option.style.display = 'block';
+
+    const tag = document.querySelector(`[data-tag="${option.innerText}"]`)
+    tag.remove()
   }
 
   // handle search event
