@@ -3,6 +3,7 @@ import { Loader } from "./components/Loader.js";
 import { renderDropdowns } from "./utils/renderDropdowns.js";
 import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
 import { renderCards } from "./utils/renderCards.js";
+import { searchBar } from "./utils/searchBar.js";
 
 class App {
   constructor() {
@@ -21,6 +22,7 @@ class App {
   async init() {
     await this.getData();
     this.renderPage();
+    this.handleSearch();
   }
 
   async getData() {
@@ -38,6 +40,14 @@ class App {
     setTimeout(() => {
       Loader.hide();
     }, 1500);
+  }
+
+  handleSearch() {
+    this.$searchInput.addEventListener("keyup", () => {
+      const filteredRecipes = searchBar(this.recipes, this.$searchInput);
+      if (!filteredRecipes) return;
+      renderCards(filteredRecipes, this.$cardsContainer);
+    });
   }
 
 }
