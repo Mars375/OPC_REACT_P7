@@ -1,6 +1,7 @@
 import { createEl } from "./createEl.js"
 
 export const renderTotalRecipes = (totalRecipes, totalRecipesContainer) => {
+  totalRecipesContainer.innerHTML = "";
   const totalRecipesEl = createEl(
     "p",
     {

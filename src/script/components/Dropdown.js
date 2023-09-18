@@ -2,6 +2,7 @@ import { createEl } from "../utils/createEl.js";
 import { createSVG } from "../utils/createSVG.js";
 import { renderTags } from "../utils/renderTags.js";
 import { renderCards } from "../utils/renderCards.js";
+import { renderTotalRecipes } from "../utils/renderTotalRecipes.js";
 import { Tags } from "./Tags.js";
 
 import { Query } from "../helpers/Query.js";
@@ -196,10 +197,12 @@ export class Dropdown {
     if (this._selectedOptions.length === 0) {
       const recipes = await Query.getRecipes();
       renderCards(recipes, this.$cardsContainer);
+      renderTotalRecipes(recipes.length, document.querySelector("#total-recipes"));
       return;
     }
     const filteredRecipe = await Query.getRecipesByTags(this._selectedOptions)
     renderCards(filteredRecipe, this.$cardsContainer);
+    renderTotalRecipes(filteredRecipe.length, document.querySelector("#total-recipes"));
 
     optionClicked && renderTags(optionClicked.innerText);
   }
