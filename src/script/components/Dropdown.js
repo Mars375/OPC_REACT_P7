@@ -1,7 +1,10 @@
 import { createEl } from "../utils/createEl.js";
 import { createSVG } from "../utils/createSVG.js";
 import { renderTags } from "../utils/renderTags.js";
+import { renderCards } from "../utils/renderCards.js";
 import { Tags } from "./Tags.js";
+
+import { Query } from "../helpers/Query.js";
 
 export class Dropdown {
   constructor(optionsData, sortType) {
@@ -9,7 +12,9 @@ export class Dropdown {
     this._sortType = sortType;
     this._selectedOptions = [];
 
-    this.createDropdown();
+    this.$cardsContainer = document.querySelector('#cards-container');
+
+    document.addEventListener("tagRemoved", this.handleTagRemoved.bind(this));
   }
 
   // Create the dropdown element and its options
@@ -83,7 +88,7 @@ export class Dropdown {
       const $option = createEl('li', {
         class: ' p-[0.81rem] text-sm hover:bg-[#FFD15B] cursor-pointer',
         dataset: {
-          dropdownOption: this._sortType,
+          dropdownOption: option,
         },
         innerText: option,
       });
@@ -109,7 +114,7 @@ export class Dropdown {
 
   // handle option click event
   handleOptionClick(option) {
-    option.addEventListener('click', () => {
+    option.addEventListener('click', async () => {
       if (this._selectedOptions.includes(option.innerText)) return;
 
       this._selectedOptions.push(option.innerText);
@@ -117,7 +122,7 @@ export class Dropdown {
       const optionClicked = createEl('li', {
         class: 'p-[0.81rem] text-sm bg-[#FFD15B] font-bold flex justify-between items-center',
         dataset: {
-          dropdownOption: this._sortType
+          dropdownOptionClicked: option.innerText,
         },
         innerText: option.innerText
       })
@@ -128,10 +133,11 @@ export class Dropdown {
       optionClicked.append($closeIcon);
       this.$dropdownListSearchContainer.insertAdjacentElement('afterend', optionClicked);
 
+      this.renderTagsAndCards(optionClicked);
+
       $closeIcon.addEventListener('click', (e) =>
         this.handleOptionCloseIconClick(option, optionClicked)
       );
-      renderTags(optionClicked.innerText);
     });
   }
 
@@ -141,17 +147,33 @@ export class Dropdown {
     optionClicked.remove()
     option.style.display = 'block';
 
-    const tag = document.querySelector(`[data-tag="${option.innerText}"]`)
-    tag.remove()
+    const $tag = document.querySelector(`[data-tag="${option.innerText}"]`)
+    new Tags().closeTags($tag)
+
+    this.renderTagsAndCards();
+  }
+
+  handleTagRemoved(e) {
+    const { tagOption } = e.detail;
+    this._selectedOptions = this._selectedOptions.filter((selectedOption) => selectedOption !== tagOption);
+
+    const $optionClicked = document.querySelector(`[data-dropdown-option-clicked="${tagOption}"]`);
+    if (!$optionClicked) return;
+    $optionClicked.remove()
+
+    const $option = document.querySelector(`[data-dropdown-option="${tagOption}"]`);
+    $option.style.display = 'block';
+
+    this.renderTagsAndCards();
   }
 
   // handle search event
   handleSearch() {
     this.$dropdownListSearch.addEventListener('input', () => {
-      const searchValue = this.$dropdownListSearch.value.toLowerCase();
+      const searchValue = this.$dropdownListSearch.value.toLowerCase().trim();
 
       this.$dropdownList.querySelectorAll('li').forEach((option) => {
-        if (option.innerText.toLowerCase().includes(searchValue)) {
+        if (option.innerText.toLowerCase().trim().includes(searchValue)) {
           option.classList.remove('hidden');
         } else {
           option.classList.add('hidden');
@@ -168,5 +190,17 @@ export class Dropdown {
         option.classList.remove('hidden');
       });
     });
+  }
+
+  async renderTagsAndCards(optionClicked) {
+    if (this._selectedOptions.length === 0) {
+      const recipes = await Query.getRecipes();
+      renderCards(recipes, this.$cardsContainer);
+      return;
+    }
+    const filteredRecipe = await Query.getRecipesByTags(this._selectedOptions)
+    renderCards(filteredRecipe, this.$cardsContainer);
+
+    optionClicked && renderTags(optionClicked.innerText);
   }
 }

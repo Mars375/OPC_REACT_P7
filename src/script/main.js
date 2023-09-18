@@ -1,4 +1,4 @@
-import { Query } from "./helpers/query.js";
+import { Query } from "./helpers/Query.js";
 import { Loader } from "./components/Loader.js";
 import { renderDropdowns } from "./utils/renderDropdowns.js";
 import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";

@@ -5,7 +5,9 @@ export const renderCards = (cards, container) => {
 
   const cardsComponent = cards.map(card => {
     const cardComponent = new RecipeCard(card);
-    container.appendChild(cardComponent.$card);
+    const $card = cardComponent.createCard();
+
+    container.append($card);
 
     return cardComponent;
   });

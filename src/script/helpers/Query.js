@@ -46,4 +46,32 @@ export class Query {
 
     return normalizedUstensils;
   }
+
+  static async getRecipesByTags(tags) {
+    const recipesData = await DataService.fetchData();
+    const recipes = recipesData.map(recipe => new Recipe(recipe));
+
+    const filteredRecipes = recipes.filter(recipe => {
+      return tags.every(tag => {
+        const normalizedTag = tag.toLowerCase().trim();
+
+        const name = recipe.name.toLowerCase().trim();
+        const description = recipe.description.toLowerCase().trim();
+        const appliance = recipe.appliance.toLowerCase().trim();
+        const ingredients = recipe.ingredientsList.map(ingredient => ingredient.ingredient.toLowerCase().trim());
+        const ustensils = recipe.ustensils.map(ustensil => ustensil.toLowerCase().trim());
+
+        return (
+          name == normalizedTag ||
+          description === normalizedTag ||
+          appliance === normalizedTag ||
+          ingredients.includes(normalizedTag) ||
+          ustensils.includes(normalizedTag)
+        );
+      });
+    });
+
+    return filteredRecipes;
+  }
+
 }

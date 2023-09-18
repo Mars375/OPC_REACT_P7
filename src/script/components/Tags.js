@@ -3,8 +3,6 @@ import { createEl } from "../utils/createEl.js";
 export class Tags {
   constructor(tagOption) {
     this.tagOption = tagOption;
-
-    this.createTags();
   }
 
   createTags() {
@@ -31,7 +29,12 @@ export class Tags {
       })
 
     this.$tagsClose.addEventListener("click", () => {
-      this.closeTags()
+      const event = new CustomEvent("tagRemoved", {
+        detail: { tagOption: this.tagOption },
+      });
+
+      document.dispatchEvent(event);
+      this.closeTags(this.$tags)
     })
 
     this.$tags.append(this.$tagsText, this.$tagsClose)
@@ -39,7 +42,7 @@ export class Tags {
     return this.$tags
   }
 
-  closeTags() {
-    this.$tags.remove()
+  closeTags(tag) {
+    tag.remove()
   }
 }
