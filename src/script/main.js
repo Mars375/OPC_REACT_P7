@@ -45,8 +45,8 @@ class App {
   handleSearch() {
     this.$searchInput.addEventListener("keyup", () => {
       const filteredRecipes = searchBar(this.recipes, this.$searchInput);
-      if (!filteredRecipes) return;
       renderCards(filteredRecipes, this.$cardsContainer);
+      renderTotalRecipes(filteredRecipes.length, this.$totalRecipes);
     });
   }
 
