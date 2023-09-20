@@ -203,21 +203,4 @@ export class Dropdown {
 
     optionClicked && renderTags(optionClicked.innerText);
   }
-
-  updateDropdown(remainingOptions) {
-    this.$dropdownListSearch.value = '';
-
-    remainingOptions.forEach((option) => {
-      const $option = createEl('li', {
-        class: ' p-[0.81rem] text-sm hover:bg-[#FFD15B] cursor-pointer',
-        dataset: {
-          dropdownOption: option,
-        },
-        innerText: option,
-      });
-
-      this.handleOptionClick($option);
-      this.$dropdownList.append($option);
-    });
-  }
 }
