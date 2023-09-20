@@ -1,7 +1,7 @@
 export const searchBar = (recipes, $searchInput) => {
   const results = []
   const searchValue = $searchInput.value.toLowerCase();
-  if (searchValue.length < 3) return recipes;
+  if (!searchValue || searchValue.length < 3) return recipes;
 
   let i = 0;
   while (i < recipes.length) {
@@ -10,9 +10,17 @@ export const searchBar = (recipes, $searchInput) => {
       name: recipe.name.toLowerCase(),
       description: recipe.description.toLowerCase(),
       appliance: recipe.appliance.toLowerCase(),
-      ingredients: recipe.ingredientsList.map(ingredient => ingredient.ingredient.toLowerCase()),
-      ustensils: recipe.ustensils.map(ustensil => ustensil.toLowerCase())
+      ingredients: [],
+      ustensils: []
     };
+
+    for (let i = 0; i < recipe.ingredientsList.length; i++) {
+      recipeFields.ingredients.push(recipe.ingredientsList[i].ingredient.toLowerCase());
+    }
+
+    for (let i = 0; i < recipe.ustensils.length; i++) {
+      recipeFields.ustensils.push(recipe.ustensils[i].toLowerCase());
+    }
 
     const isRecipeName = recipeFields.name.includes(searchValue);
     const isRecipeDescription = recipeFields.description.includes(searchValue);
