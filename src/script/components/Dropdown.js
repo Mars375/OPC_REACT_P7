@@ -7,12 +7,11 @@ import { Tags } from "./Tags.js";
 import { Query } from "../helpers/Query.js";
 
 export class Dropdown {
-  constructor(optionsData, sortType) {
+  constructor(optionsData, sortType, cardsContainer) {
     this._optionsData = optionsData;
     this._sortType = sortType;
     this._selectedOptions = [];
-
-    this.$cardsContainer = document.querySelector('#cards-container');
+    this.$cardsContainer = cardsContainer;
 
     document.addEventListener("tagRemoved", this.handleTagRemoved.bind(this));
   }
@@ -84,6 +83,7 @@ export class Dropdown {
 
   // Create the dropdown options
   createDropdownOptions() {
+    this.$dropdownList.innerHTML = '';
     this._optionsData.forEach((option) => {
       const $option = createEl('li', {
         class: ' p-[0.81rem] text-sm hover:bg-[#FFD15B] cursor-pointer',

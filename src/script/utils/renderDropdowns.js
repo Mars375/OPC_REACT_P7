@@ -1,6 +1,6 @@
 import { Dropdown } from "../components/Dropdown.js";
 
-export const renderDropdowns = (dropdownContainer, ingredients, appliances, ustensils) => {
+export const renderDropdowns = (dropdownContainer, ingredients, appliances, ustensils, cardsContainer) => {
   const dropdownData = [
     { data: ingredients, label: "Ingredients" },
     { data: appliances, label: "Appareils" },
@@ -8,7 +8,7 @@ export const renderDropdowns = (dropdownContainer, ingredients, appliances, uste
   ];
 
   const dropdowns = dropdownData.map(dropdown => {
-    const dropdownComponent = new Dropdown(dropdown.data, dropdown.label);
+    const dropdownComponent = new Dropdown(dropdown.data, dropdown.label, cardsContainer);
     const $dropdown = dropdownComponent.createDropdown();
 
     dropdownContainer.append($dropdown);

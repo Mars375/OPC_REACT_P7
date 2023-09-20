@@ -11,11 +11,9 @@ export class Query {
     return recipes;
   }
 
-  static async getIngredients() {
-    const recipes = await DataService.fetchData();
-
+  static getIngredients(recipes) {
     const normalizedIngredients = recipes
-      .map(recipe => recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase()))
+      .map(recipe => recipe.ingredientsList.map(ingredient => ingredient.ingredient.toLowerCase()))
       .flat()
       .sort()
       .filter((ingredient, index, array) => ingredient !== array[index + 1])
@@ -24,8 +22,7 @@ export class Query {
     return normalizedIngredients;
   }
 
-  static async getAppliances() {
-    const recipes = await DataService.fetchData();
+  static getAppliances(recipes) {
     const normalizedAppliances = recipes
       .map(recipe => recipe.appliance.toLowerCase())
       .sort()
@@ -35,8 +32,7 @@ export class Query {
     return normalizedAppliances;
   }
 
-  static async getUstensils() {
-    const recipes = await DataService.fetchData();
+  static getUstensils(recipes) {
     const normalizedUstensils = recipes
       .map(recipe => recipe.ustensils.map(ustensil => ustensil.toLowerCase()))
       .flat()
