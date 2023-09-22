@@ -43,11 +43,8 @@ export class Query {
     return normalizedUstensils;
   }
 
-  static async getRecipesByTags(tags) {
-    const recipesData = await DataService.fetchData();
-    const recipes = recipesData.map(recipe => new Recipe(recipe));
-
-    const filteredRecipes = recipes.filter(recipe => {
+  static async getRecipesByTags(searchedRecipes, tags) {
+    const filteredRecipes = searchedRecipes.filter(recipe => {
       return tags.every(tag => {
         const normalizedTag = tag.toLowerCase().trim();
 

@@ -1,4 +1,4 @@
-import { createEl } from "../utils/createEl.js";
+import { createEl } from "../utils/index.js";
 
 export class RecipeCard {
   constructor(recipe) {

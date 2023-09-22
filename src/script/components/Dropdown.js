@@ -1,19 +1,15 @@
-import { createEl } from "../utils/createEl.js";
-import { createSVG } from "../utils/createSVG.js";
-import { renderTags } from "../utils/renderTags.js";
-import { renderCards } from "../utils/renderCards.js";
+import { createEl, createSVG, renderTags, renderCards } from "../utils/index.js";
 import { Tags } from "./Tags.js";
 
 import { Query } from "../helpers/Query.js";
 
 export class Dropdown {
-  constructor(optionsData, sortType, cardsContainer) {
+  constructor(optionsData, sortType, cardsContainer, recipes) {
     this._optionsData = optionsData;
     this._sortType = sortType;
     this._selectedOptions = [];
+    this._searchedRecipes = recipes;
     this.$cardsContainer = cardsContainer;
-
-    document.addEventListener("tagRemoved", this.handleTagRemoved.bind(this));
   }
 
   // Create the dropdown element and its options
@@ -83,7 +79,6 @@ export class Dropdown {
 
   // Create the dropdown options
   createDropdownOptions() {
-    this.$dropdownList.innerHTML = '';
     this._optionsData.forEach((option) => {
       const $option = createEl('li', {
         class: ' p-[0.81rem] text-sm hover:bg-[#FFD15B] cursor-pointer',
@@ -148,18 +143,18 @@ export class Dropdown {
     option.style.display = 'block';
 
     const $tag = document.querySelector(`[data-tag="${option.innerText}"]`)
+    if (!$tag) return;
     new Tags().closeTags($tag)
 
     this.renderTagsAndCards();
   }
 
-  handleTagRemoved(e) {
-    const { tagOption } = e.detail;
+  handleTagRemoved(tagOption) {
     this._selectedOptions = this._selectedOptions.filter((selectedOption) => selectedOption !== tagOption);
 
     const $optionClicked = document.querySelector(`[data-dropdown-option-clicked="${tagOption}"]`);
     if (!$optionClicked) return;
-    $optionClicked.remove()
+    $optionClicked.remove();
 
     const $option = document.querySelector(`[data-dropdown-option="${tagOption}"]`);
     $option.style.display = 'block';
@@ -194,13 +189,22 @@ export class Dropdown {
 
   async renderTagsAndCards(optionClicked) {
     if (this._selectedOptions.length === 0) {
-      const recipes = await Query.getRecipes();
-      renderCards(recipes, this.$cardsContainer);
+      renderCards(this._searchedRecipes, this.$cardsContainer);
       return;
     }
-    const filteredRecipe = await Query.getRecipesByTags(this._selectedOptions)
-    renderCards(filteredRecipe, this.$cardsContainer);
+    const filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions)
+    if (optionClicked) {
+      const $tags = renderTags(optionClicked.innerText);
+      $tags.$tagsClose.addEventListener('click', () => {
+        this.handleTagRemoved(optionClicked.innerText);
+        $tags.closeTags($tags.$tags);
+      });
+    }
 
-    optionClicked && renderTags(optionClicked.innerText);
+    if (filteredRecipes.length === 0) {
+      this.$cardsContainer.innerHTML = `<p class="text-center text-[#7A7A7A]">No recipes found</p>`;
+      return;
+    }
+    renderCards(filteredRecipes, this.$cardsContainer);
   }
 }

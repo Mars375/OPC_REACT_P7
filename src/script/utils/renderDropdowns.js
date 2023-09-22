@@ -1,6 +1,13 @@
 import { Dropdown } from "../components/Dropdown.js";
+import { Query } from "../helpers/Query.js";
 
-export const renderDropdowns = (dropdownContainer, ingredients, appliances, ustensils, cardsContainer) => {
+export const renderDropdowns = (dropdownContainer, recipes, cardsContainer) => {
+  dropdownContainer.innerHTML = "";
+
+  const ingredients = Query.getIngredients(recipes);
+  const appliances = Query.getAppliances(recipes);
+  const ustensils = Query.getUstensils(recipes);
+
   const dropdownData = [
     { data: ingredients, label: "Ingredients" },
     { data: appliances, label: "Appareils" },
@@ -8,7 +15,7 @@ export const renderDropdowns = (dropdownContainer, ingredients, appliances, uste
   ];
 
   const dropdowns = dropdownData.map(dropdown => {
-    const dropdownComponent = new Dropdown(dropdown.data, dropdown.label, cardsContainer);
+    const dropdownComponent = new Dropdown(dropdown.data, dropdown.label, cardsContainer, recipes);
     const $dropdown = dropdownComponent.createDropdown();
 
     dropdownContainer.append($dropdown);

@@ -5,7 +5,7 @@ export const searchBar = (recipes, searchInput, $searchButton, cardsContainer) =
   if (!searchValue || searchValue.length < 3) {
     $searchButton.classList.remove("bg-[#FFD15B]");
     $searchButton.classList.add("bg-black");
-    return recipes;
+    return;
   }
 
   $searchButton.classList.remove("bg-black");

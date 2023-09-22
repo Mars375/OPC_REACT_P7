@@ -1,4 +1,4 @@
-import { createEl } from "./createEl.js"
+import { createEl } from "./index.js"
 
 export const renderTotalRecipes = (totalRecipes, totalRecipesContainer) => {
   // Create the total recipes element.
