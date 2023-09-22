@@ -10,6 +10,8 @@ class App {
     this.$totalRecipes = document.querySelector("#total-recipes");
     this.$cardsContainer = document.querySelector("#cards-container");
 
+    this.filteredRecipes = [];
+
     this.init();
   }
 
@@ -29,7 +31,7 @@ class App {
     const recipesToRender = filteredRecipes || this.recipes;
     renderDropdowns(this.$dropdownContainer, recipesToRender, this.$cardsContainer);
     renderTotalRecipes(recipesToRender.length, this.$totalRecipes);
-    renderCards(recipesToRender, this.$cardsContainer);
+    renderCards(recipesToRender, this.$cardsContainer, this.$searchInput);
   }
 
   setupSearchListener() {

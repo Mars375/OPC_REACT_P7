@@ -23,37 +23,16 @@ export const searchBar = (recipes, searchInput, $searchButton, cardsContainer) =
       return ingredient.ingredient.toLowerCase();
     });
 
-    // Get the recipe appliance.
-    const recipeAppliance = recipe.appliance.toLowerCase();
-
-    // Get the recipe ustensils.
-    const recipeUstensils = recipe.ustensils.map((ustensil) => {
-      return ustensil.toLowerCase();
-    });
-
     // Check if the recipe name, description, ingredients, appliance or ustensils contains the search value.
     if (
       recipeName.includes(searchValue) ||
       recipeDescription.includes(searchValue) ||
-      recipeIngredients.includes(searchValue) ||
-      recipeAppliance.includes(searchValue) ||
-      recipeUstensils.includes(searchValue)
+      recipeIngredients.includes(searchValue)
     ) {
       // Return the recipe.
       return recipe;
     }
   });
-
-  if (!filteredRecipes || filteredRecipes.length === 0) {
-    cardsContainer.classList.remove("grid-cols-3");
-    cardsContainer.innerHTML = `
-          <div class="flex flex-col items-center justify-center w-full h-full text-center">
-            <h2 class="text-3xl font-bold text-gray-600">Aucune recette ne correspond à ${searchValue}…</h2>
-            <p class="text-xl text-gray-400">Vous pouvez chercher « tarte aux pommes », « poisson », etc.</p>
-          </div>
-        `;
-    return;
-  };
 
   return filteredRecipes;
 }
