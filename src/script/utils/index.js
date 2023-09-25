@@ -5,6 +5,7 @@ import { renderDropdowns } from "./renderDropdowns.js";
 import { renderTags } from "./renderTags.js";
 import { renderTotalRecipes } from "./renderTotalRecipes.js";
 import { searchBar } from "./searchBar.js";
+import { updateDropdowns } from "./updateDropdowns.js";
 
 export {
   createEl,
@@ -14,4 +15,5 @@ export {
   renderTags,
   renderTotalRecipes,
   searchBar,
+  updateDropdowns,
 };

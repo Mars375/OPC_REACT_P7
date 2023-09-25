@@ -1,8 +1,8 @@
 import { Query } from "./helpers/Query.js";
 import { Loader } from "./components/Loader.js";
-import { renderTotalRecipes, renderCards, renderDropdowns, searchBar } from "./utils/index.js";
+import { renderTotalRecipes, renderCards, renderDropdowns, searchBar, updateDropdowns } from "./utils/index.js";
 
-class App {
+export class App {
   constructor() {
     this.$searchInput = document.querySelector("#search-input");
     this.$searchButton = document.querySelector("#search-button");
@@ -10,7 +10,10 @@ class App {
     this.$totalRecipes = document.querySelector("#total-recipes");
     this.$cardsContainer = document.querySelector("#cards-container");
 
-    this.filteredRecipes = [];
+    this.filteredRecipes;
+    this.searchedRecipes;
+    this.appInstance = this;
+    this.dropdowns
 
     this.init();
   }
@@ -25,19 +28,21 @@ class App {
     this.recipes = await Query.getRecipes();
 
     this.renderPage();
+    this.dropdowns = renderDropdowns(this.$dropdownContainer, this.recipes, this.$cardsContainer, this.appInstance);
   }
 
-  renderPage(filteredRecipes) {
-    const recipesToRender = filteredRecipes || this.recipes;
-    renderDropdowns(this.$dropdownContainer, recipesToRender, this.$cardsContainer);
+  renderPage() {
+    const recipesToRender = this.searchedRecipes ? this.searchedRecipes : this.recipes;
     renderTotalRecipes(recipesToRender.length, this.$totalRecipes);
     renderCards(recipesToRender, this.$cardsContainer, this.$searchInput);
   }
 
   setupSearchListener() {
     this.$searchInput.addEventListener("keyup", () => {
-      const filteredRecipes = searchBar(this.recipes, this.$searchInput, this.$searchButton, this.$cardsContainer);
-      this.renderPage(filteredRecipes);
+      const dataToUse = this.filteredRecipes && this.filteredRecipes.length > 0 ? this.filteredRecipes : this.recipes;
+      this.searchedRecipes = searchBar(dataToUse, this.$searchInput, this.$searchButton, this.$cardsContainer);
+      this.renderPage();
+      updateDropdowns(this.dropdowns, this.searchedRecipes);
     });
   }
 

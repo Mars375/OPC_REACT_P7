@@ -1,15 +1,18 @@
-import { createEl, createSVG, renderTags, renderCards } from "../utils/index.js";
+import { createEl, createSVG, renderTags, renderCards, renderDropdowns } from "../utils/index.js";
 import { Tags } from "./Tags.js";
 
 import { Query } from "../helpers/Query.js";
 
 export class Dropdown {
-  constructor(optionsData, sortType, cardsContainer, recipes) {
+  constructor(optionsData, sortType, cardsContainer, recipes, appInstance) {
     this._optionsData = optionsData;
     this._sortType = sortType;
     this._selectedOptions = [];
     this._searchedRecipes = recipes;
     this.$cardsContainer = cardsContainer;
+    this.filteredRecipes = [];
+
+    this.appInstance = appInstance;
   }
 
   // Create the dropdown element and its options
@@ -32,7 +35,7 @@ export class Dropdown {
       class: 'fas fa-chevron-down ml-2 text-base',
     });
 
-    this.$dropdownList = createEl('ul', {
+    this.$dropdownList = createEl('div', {
       class: 'absolute right-0 top-12 bg-white rounded-md w-full max-h-80 overflow-y-auto hidden z-10 p-4 ',
       dataset: {
         dropdownList: this._sortType,
@@ -61,6 +64,10 @@ export class Dropdown {
       class: 'fas fa-times text-[#7A7A7A] text-sm cursor-pointer mr-2',
     });
 
+    this.$dropdownUl = createEl('ul', {
+      class: 'w-full',
+    });
+
     this.$dropdownButton.innerText = this._sortType;
 
     this.$dropdownListSearchIconContainer.append(this.$dropdownListSearchCloseIcon, this.$dropdownListSearchIcon);
@@ -78,8 +85,12 @@ export class Dropdown {
   }
 
   // Create the dropdown options
-  createDropdownOptions() {
-    this._optionsData.forEach((option) => {
+  createDropdownOptions(dropdownData) {
+    const dropdownDataToUse = dropdownData || this._optionsData;
+
+    this.$dropdownUl.innerHTML = '';
+
+    dropdownDataToUse.forEach((option) => {
       const $option = createEl('li', {
         class: ' p-[0.81rem] text-sm hover:bg-[#FFD15B] cursor-pointer',
         dataset: {
@@ -88,9 +99,15 @@ export class Dropdown {
         innerText: option,
       });
 
+      if (this._selectedOptions.includes(option)) {
+        $option.style.display = 'none';
+      }
+
       this.handleOptionClick($option);
-      this.$dropdownList.append($option);
+      this.$dropdownUl.append($option);
     });
+
+    this.$dropdownList.append(this.$dropdownUl);
   }
 
   // handle the dropdown button click event
@@ -192,7 +209,7 @@ export class Dropdown {
       renderCards(this._searchedRecipes, this.$cardsContainer);
       return;
     }
-    const filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions)
+    this.filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions)
     if (optionClicked) {
       const $tags = renderTags(optionClicked.innerText);
       $tags.$tagsClose.addEventListener('click', () => {
@@ -201,10 +218,16 @@ export class Dropdown {
       });
     }
 
-    if (filteredRecipes.length === 0) {
+    if (this.filteredRecipes.length === 0) {
       this.$cardsContainer.innerHTML = `<p class="text-center text-[#7A7A7A]">No recipes found</p>`;
       return;
     }
-    renderCards(filteredRecipes, this.$cardsContainer);
+
+    this.appInstance.filteredRecipes = this.filteredRecipes;
+    renderCards(this.filteredRecipes, this.$cardsContainer);
+  }
+
+  updateDropdown(recipes) {
+
   }
 }

@@ -2,10 +2,12 @@ export const searchBar = (recipes, searchInput, $searchButton, cardsContainer) =
   cardsContainer.classList.add("grid-cols-3");
   // Get the value of the search input.
   const searchValue = searchInput.value.trim().toLowerCase();
-  if (!searchValue || searchValue.length < 3) {
+
+  // If the search value is empty or less than 3, return the recipes array.
+  if (searchValue.length < 3 || searchValue === "") {
     $searchButton.classList.remove("bg-[#FFD15B]");
     $searchButton.classList.add("bg-black");
-    return;
+    return recipes;
   }
 
   $searchButton.classList.remove("bg-black");
@@ -31,6 +33,8 @@ export const searchBar = (recipes, searchInput, $searchButton, cardsContainer) =
     ) {
       // Return the recipe.
       return recipe;
+    } else {
+      return;
     }
   });
 
