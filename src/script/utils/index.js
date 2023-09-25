@@ -1,6 +1,6 @@
 import { createEl } from "./createEl.js";
 import { createSVG } from "./createSVG.js";
-import { renderCards } from "./renderCards.js";
+import { renderCardsAndTotal } from "./renderCardsAndTotal.js";
 import { renderDropdowns } from "./renderDropdowns.js";
 import { renderTags } from "./renderTags.js";
 import { renderTotalRecipes } from "./renderTotalRecipes.js";
@@ -10,7 +10,7 @@ import { updateDropdowns } from "./updateDropdowns.js";
 export {
   createEl,
   createSVG,
-  renderCards,
+  renderCardsAndTotal,
   renderDropdowns,
   renderTags,
   renderTotalRecipes,

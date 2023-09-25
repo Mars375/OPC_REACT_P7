@@ -17,7 +17,6 @@ export const updateDropdowns = (dropdowns, recipes) => {
   dropdowns.forEach((dropdown, index) => {
     // Get the data for the current dropdown#
     const dropdownDataToUse = dropdownData[index];
-
     // Update the dropdown
     dropdown.createDropdownOptions(dropdownDataToUse.data);
   });

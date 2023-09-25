@@ -1,4 +1,4 @@
-import { createEl, createSVG, renderTags, renderCards, renderDropdowns } from "../utils/index.js";
+import { createEl, createSVG, renderTags, renderCardsAndTotal } from "../utils/index.js";
 import { Tags } from "./Tags.js";
 
 import { Query } from "../helpers/Query.js";
@@ -206,7 +206,7 @@ export class Dropdown {
 
   async renderTagsAndCards(optionClicked) {
     if (this._selectedOptions.length === 0) {
-      renderCards(this._searchedRecipes, this.$cardsContainer);
+      renderCardsAndTotal(this._searchedRecipes, this.$cardsContainer);
       return;
     }
     this.filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions)
@@ -218,13 +218,8 @@ export class Dropdown {
       });
     }
 
-    if (this.filteredRecipes.length === 0) {
-      this.$cardsContainer.innerHTML = `<p class="text-center text-[#7A7A7A]">No recipes found</p>`;
-      return;
-    }
-
     this.appInstance.filteredRecipes = this.filteredRecipes;
-    renderCards(this.filteredRecipes, this.$cardsContainer);
+    renderCardsAndTotal(this.filteredRecipes, this.$cardsContainer);
   }
 
   updateDropdown(recipes) {

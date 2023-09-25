@@ -1,13 +1,12 @@
 import { Query } from "./helpers/Query.js";
 import { Loader } from "./components/Loader.js";
-import { renderTotalRecipes, renderCards, renderDropdowns, searchBar, updateDropdowns } from "./utils/index.js";
+import { renderCardsAndTotal, renderDropdowns, searchBar, updateDropdowns } from "./utils/index.js";
 
 export class App {
   constructor() {
     this.$searchInput = document.querySelector("#search-input");
     this.$searchButton = document.querySelector("#search-button");
     this.$dropdownContainer = document.querySelector("#dropdowns-container");
-    this.$totalRecipes = document.querySelector("#total-recipes");
     this.$cardsContainer = document.querySelector("#cards-container");
 
     this.filteredRecipes;
@@ -33,8 +32,7 @@ export class App {
 
   renderPage() {
     const recipesToRender = this.searchedRecipes ? this.searchedRecipes : this.recipes;
-    renderTotalRecipes(recipesToRender.length, this.$totalRecipes);
-    renderCards(recipesToRender, this.$cardsContainer, this.$searchInput);
+    renderCardsAndTotal(recipesToRender, this.$cardsContainer, this.$searchInput);
   }
 
   setupSearchListener() {
