@@ -15,6 +15,7 @@ export const renderCardsAndTotal = (recipes, container, searchInput) => {
       </div>
     `;
   } else {
+    container.classList.add("grid-cols-3");
     const cardsComponent = recipes.map(card => {
       const cardComponent = new RecipeCard(card);
       const $card = cardComponent.createCard();

@@ -1,4 +1,4 @@
-import { createEl, createSVG, renderTags, renderCardsAndTotal } from "../utils/index.js";
+import { createEl, createSVG, renderTags, renderCardsAndTotal, updateDropdowns } from "../utils/index.js";
 import { Tags } from "./Tags.js";
 
 import { Query } from "../helpers/Query.js";
@@ -206,10 +206,11 @@ export class Dropdown {
 
   async renderTagsAndCards(optionClicked) {
     if (this._selectedOptions.length === 0) {
-      renderCardsAndTotal(this._searchedRecipes, this.$cardsContainer);
-      return;
+      this.filteredRecipes = this._searchedRecipes;
+    } else {
+      this.filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions);
     }
-    this.filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions)
+
     if (optionClicked) {
       const $tags = renderTags(optionClicked.innerText);
       $tags.$tagsClose.addEventListener('click', () => {
@@ -220,9 +221,6 @@ export class Dropdown {
 
     this.appInstance.filteredRecipes = this.filteredRecipes;
     renderCardsAndTotal(this.filteredRecipes, this.$cardsContainer);
-  }
-
-  updateDropdown(recipes) {
-
+    updateDropdowns(this.appInstance.dropdowns, this.filteredRecipes);
   }
 }
