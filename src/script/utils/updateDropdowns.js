@@ -1,19 +1,23 @@
 import { Query } from "../helpers/Query.js"
 
-export const updateDropdowns = (dropdowns, filteredRecipe) => {
-  const ingredients = Query.getIngredients(filteredRecipe);
-  const appliances = Query.getAppliances(filteredRecipe);
-  const ustensils = Query.getUstensils(filteredRecipe);
+export const updateDropdowns = (dropdowns, recipes) => {
+  // Get the data for each dropdown
+  const ingredients = Query.getIngredients(recipes);
+  const appliances = Query.getAppliances(recipes);
+  const ustensils = Query.getUstensils(recipes);
 
-  dropdowns.forEach(dropdown => {
-    if (dropdown._sortType === "Ingredients") {
-      dropdown._optionsData = ingredients;
-    } else if (dropdown._sortType === "Appareils") {
-      dropdown._optionsData = appliances;
-    } else if (dropdown._sortType === "Ustensiles") {
-      dropdown._optionsData = ustensils;
-    }
-    dropdown.createDropdownOptions();
+  // Create an array with the dropdown data
+  const dropdownData = [
+    { data: ingredients, label: "Ingredients" },
+    { data: appliances, label: "Appareils" },
+    { data: ustensils, label: "Ustensiles" }
+  ];
+
+  // Loop through each dropdown
+  dropdowns.forEach((dropdown, index) => {
+    // Get the data for the current dropdown#
+    const dropdownDataToUse = dropdownData[index];
+    // Update the dropdown
+    dropdown.createDropdownOptions(dropdownDataToUse.data);
   });
 }
-

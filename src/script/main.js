@@ -1,59 +1,52 @@
 import { Query } from "./helpers/Query.js";
 import { Loader } from "./components/Loader.js";
-import { renderDropdowns } from "./utils/renderDropdowns.js";
-import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
-import { renderCards } from "./utils/renderCards.js";
-import { searchBar } from "./utils/searchBar.js";
-import { updateDropdowns } from "./utils/updateDropdowns.js";
+import { renderCardsAndTotal, renderDropdowns, searchBar, updateDropdowns } from "./utils/index.js";
 
-class App {
+export class App {
   constructor() {
-    this.recipes = [];
-    this.ingredients = [];
-    this.appliances = [];
-    this.ustensils = [];
-    this.dropdowns = [];
     this.$searchInput = document.querySelector("#search-input");
     this.$searchButton = document.querySelector("#search-button");
     this.$dropdownContainer = document.querySelector("#dropdowns-container");
-    this.$totalRecipes = document.querySelector("#total-recipes");
     this.$cardsContainer = document.querySelector("#cards-container");
+
+    this.filteredRecipes;
+    this.searchedRecipes;
+    this.appInstance = this;
+    this.dropdowns
+
     this.init();
   }
 
   async init() {
-    await this.getData();
-    this.renderPage();
-    this.handleSearch();
+    await this.loadData();
+    this.setupSearchListener();
+    this.setupLoader();
   }
 
-  async getData() {
+  async loadData() {
     this.recipes = await Query.getRecipes();
-    this.ingredients = await Query.getIngredients(this.recipes);
-    this.appliances = await Query.getAppliances(this.recipes);
-    this.ustensils = await Query.getUstensils(this.recipes);
+
+    this.renderPage();
+    this.dropdowns = renderDropdowns(this.$dropdownContainer, this.recipes, this.$cardsContainer, this.appInstance);
   }
 
   renderPage() {
-    this.dropdowns = renderDropdowns(this.$dropdownContainer, this.ingredients, this.appliances, this.ustensils, this.$cardsContainer);
-    renderTotalRecipes(this.recipes.length, this.$totalRecipes);
-    renderCards(this.recipes, this.$cardsContainer);
-
-    setTimeout(() => {
-      Loader.hide();
-    }, 1500);
+    const recipesToRender = this.searchedRecipes ? this.searchedRecipes : this.recipes;
+    renderCardsAndTotal(recipesToRender, this.$cardsContainer, this.$searchInput);
   }
 
-  handleSearch() {
+  setupSearchListener() {
     this.$searchInput.addEventListener("keyup", () => {
-      const filteredRecipes = searchBar(this.recipes, this.$searchInput, this.$searchButton, this.$cardsContainer);
-      if (!filteredRecipes) return;
-      updateDropdowns(this.dropdowns, filteredRecipes);
-      renderCards(filteredRecipes, this.$cardsContainer);
-      renderTotalRecipes(filteredRecipes.length, this.$totalRecipes);
+      const dataToUse = this.filteredRecipes && this.filteredRecipes.length > 0 ? this.filteredRecipes : this.recipes;
+      this.searchedRecipes = searchBar(dataToUse, this.$searchInput, this.$searchButton, this.$cardsContainer);
+      this.renderPage();
+      updateDropdowns(this.dropdowns, this.searchedRecipes);
     });
   }
 
+  setupLoader() {
+    Loader.hide()
+  }
 }
 
 new App();

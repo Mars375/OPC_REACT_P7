@@ -1,19 +1,18 @@
-import { createEl } from "../utils/createEl.js";
-import { createSVG } from "../utils/createSVG.js";
-import { renderTags } from "../utils/renderTags.js";
-import { renderCards } from "../utils/renderCards.js";
+import { createEl, createSVG, renderTags, renderCardsAndTotal } from "../utils/index.js";
 import { Tags } from "./Tags.js";
 
 import { Query } from "../helpers/Query.js";
 
 export class Dropdown {
-  constructor(optionsData, sortType, cardsContainer) {
+  constructor(optionsData, sortType, cardsContainer, recipes, appInstance) {
     this._optionsData = optionsData;
     this._sortType = sortType;
     this._selectedOptions = [];
+    this._searchedRecipes = recipes;
     this.$cardsContainer = cardsContainer;
+    this.filteredRecipes = [];
 
-    document.addEventListener("tagRemoved", this.handleTagRemoved.bind(this));
+    this.appInstance = appInstance;
   }
 
   // Create the dropdown element and its options
@@ -36,7 +35,7 @@ export class Dropdown {
       class: 'fas fa-chevron-down ml-2 text-base',
     });
 
-    this.$dropdownList = createEl('ul', {
+    this.$dropdownList = createEl('div', {
       class: 'absolute right-0 top-12 bg-white rounded-md w-full max-h-80 overflow-y-auto hidden z-10 p-4 ',
       dataset: {
         dropdownList: this._sortType,
@@ -65,6 +64,10 @@ export class Dropdown {
       class: 'fas fa-times text-[#7A7A7A] text-sm cursor-pointer mr-2',
     });
 
+    this.$dropdownUl = createEl('ul', {
+      class: 'w-full',
+    });
+
     this.$dropdownButton.innerText = this._sortType;
 
     this.$dropdownListSearchIconContainer.append(this.$dropdownListSearchCloseIcon, this.$dropdownListSearchIcon);
@@ -82,9 +85,12 @@ export class Dropdown {
   }
 
   // Create the dropdown options
-  createDropdownOptions() {
-    this.$dropdownList.innerHTML = '';
-    this._optionsData.forEach((option) => {
+  createDropdownOptions(dropdownData) {
+    const dropdownDataToUse = dropdownData || this._optionsData;
+
+    this.$dropdownUl.innerHTML = '';
+
+    dropdownDataToUse.forEach((option) => {
       const $option = createEl('li', {
         class: ' p-[0.81rem] text-sm hover:bg-[#FFD15B] cursor-pointer',
         dataset: {
@@ -93,9 +99,15 @@ export class Dropdown {
         innerText: option,
       });
 
+      if (this._selectedOptions.includes(option)) {
+        $option.style.display = 'none';
+      }
+
       this.handleOptionClick($option);
-      this.$dropdownList.append($option);
+      this.$dropdownUl.append($option);
     });
+
+    this.$dropdownList.append(this.$dropdownUl);
   }
 
   // handle the dropdown button click event
@@ -148,18 +160,18 @@ export class Dropdown {
     option.style.display = 'block';
 
     const $tag = document.querySelector(`[data-tag="${option.innerText}"]`)
+    if (!$tag) return;
     new Tags().closeTags($tag)
 
     this.renderTagsAndCards();
   }
 
-  handleTagRemoved(e) {
-    const { tagOption } = e.detail;
+  handleTagRemoved(tagOption) {
     this._selectedOptions = this._selectedOptions.filter((selectedOption) => selectedOption !== tagOption);
 
     const $optionClicked = document.querySelector(`[data-dropdown-option-clicked="${tagOption}"]`);
     if (!$optionClicked) return;
-    $optionClicked.remove()
+    $optionClicked.remove();
 
     const $option = document.querySelector(`[data-dropdown-option="${tagOption}"]`);
     $option.style.display = 'block';
@@ -194,13 +206,23 @@ export class Dropdown {
 
   async renderTagsAndCards(optionClicked) {
     if (this._selectedOptions.length === 0) {
-      const recipes = await Query.getRecipes();
-      renderCards(recipes, this.$cardsContainer);
+      renderCardsAndTotal(this._searchedRecipes, this.$cardsContainer);
       return;
     }
-    const filteredRecipe = await Query.getRecipesByTags(this._selectedOptions)
-    renderCards(filteredRecipe, this.$cardsContainer);
+    this.filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions)
+    if (optionClicked) {
+      const $tags = renderTags(optionClicked.innerText);
+      $tags.$tagsClose.addEventListener('click', () => {
+        this.handleTagRemoved(optionClicked.innerText);
+        $tags.closeTags($tags.$tags);
+      });
+    }
 
-    optionClicked && renderTags(optionClicked.innerText);
+    this.appInstance.filteredRecipes = this.filteredRecipes;
+    renderCardsAndTotal(this.filteredRecipes, this.$cardsContainer);
+  }
+
+  updateDropdown(recipes) {
+
   }
 }
