@@ -39,6 +39,9 @@ export class App {
     this.$searchInput.addEventListener("keyup", () => {
       const dataToUse = this.filteredRecipes && this.filteredRecipes.length > 0 ? this.filteredRecipes : this.recipes;
       this.searchedRecipes = searchBar(dataToUse, this.$searchInput, this.$searchButton, this.$cardsContainer);
+      this.dropdowns.forEach((dropdown) => {
+        dropdown._searchedRecipes = this.searchedRecipes
+      });
       this.renderPage();
       updateDropdowns(this.dropdowns, this.searchedRecipes);
     });
