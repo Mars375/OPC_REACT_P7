@@ -1,7 +1,6 @@
 import { Query } from "../helpers/Query.js"
 
 export const updateDropdowns = (dropdowns, recipes) => {
-  console.log(recipes);
   // Get the data for each dropdown
   const ingredients = Query.getIngredients(recipes);
   const appliances = Query.getAppliances(recipes);

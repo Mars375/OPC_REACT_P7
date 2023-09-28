@@ -209,6 +209,7 @@ export class Dropdown {
       this.filteredRecipes = this._searchedRecipes;
     } else {
       this.filteredRecipes = await Query.getRecipesByTags(this._searchedRecipes, this._selectedOptions);
+      console.log(this.filteredRecipes);
     }
 
     if (optionClicked) {
