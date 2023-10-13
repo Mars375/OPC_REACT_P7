@@ -1,7 +1,7 @@
-import { createEl } from "../utils/createEl.js";
+import { createEl } from "../utils/index.js";
 
 export class Tags {
-  constructor(tagOption) {
+  constructor(tagOption,) {
     this.tagOption = tagOption;
   }
 
@@ -27,15 +27,6 @@ export class Tags {
           tagClose: this.tagOption
         }
       })
-
-    this.$tagsClose.addEventListener("click", () => {
-      const event = new CustomEvent("tagRemoved", {
-        detail: { tagOption: this.tagOption },
-      });
-
-      document.dispatchEvent(event);
-      this.closeTags(this.$tags)
-    })
 
     this.$tags.append(this.$tagsText, this.$tagsClose)
 
