@@ -16,17 +16,14 @@ export const searchBar = (recipes, searchValue, $searchButton, cardsContainer) =
       return ingredient.ingredient.toLowerCase();
     });
 
+    const searchKeywords = searchValue.toLowerCase().split(' ')
+
     // Check if the recipe name, description, ingredients, appliance or ustensils contains the search value.
-    if (
-      recipeName.includes(searchValue) ||
-      recipeDescription.includes(searchValue) ||
-      recipeIngredients.includes(searchValue)
-    ) {
-      // Return the recipe.
-      return recipe;
-    } else {
-      return;
-    }
+    return searchKeywords.every(keyword => (
+      recipeName.includes(keyword) ||
+      recipeDescription.includes(keyword) ||
+      recipeIngredients.some(ingredient => ingredient.includes(keyword))
+    ));
   });
 
   return filteredRecipes;
