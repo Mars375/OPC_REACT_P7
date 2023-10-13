@@ -30,3 +30,4 @@ export const renderCardsAndTotal = (recipes, container, searchInput) => {
     totalRecipesContainer.appendChild(totalRecipesEl);
   }
 }
+
