@@ -130,6 +130,7 @@ export class Dropdown {
       if (this._selectedOptions.includes(option.innerText)) return;
 
       this._selectedOptions.push(option.innerText);
+      console.log(option.innerText);
 
       const optionClicked = createEl('li', {
         class: 'p-[0.81rem] text-sm bg-[#FFD15B] font-bold flex justify-between items-center',
@@ -174,6 +175,7 @@ export class Dropdown {
     $optionClicked.remove();
 
     const $option = document.querySelector(`[data-dropdown-option="${tagOption}"]`);
+    if (!$option) return;
     $option.style.display = 'block';
 
     this.renderTagsAndCards();
@@ -219,7 +221,6 @@ export class Dropdown {
       });
     }
 
-    this.appInstance.filteredRecipes = this.filteredRecipes;
     renderCardsAndTotal(this.filteredRecipes, this.$cardsContainer);
     updateDropdowns(this.appInstance.dropdowns, this.filteredRecipes);
   }

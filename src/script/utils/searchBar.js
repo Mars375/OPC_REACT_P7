@@ -1,13 +1,6 @@
-export const searchBar = (recipes, $searchInput, $searchButton, cardsContainer) => {
+export const searchBar = (recipes, searchValue, $searchButton, cardsContainer) => {
   cardsContainer.classList.add("grid-cols-3");
   const results = []
-  const searchValue = $searchInput.value.toLowerCase();
-
-  if (searchValue.length < 3 || searchValue === "") {
-    $searchButton.classList.remove("bg-[#FFD15B]");
-    $searchButton.classList.add("bg-black");
-    return recipes;
-  }
 
   $searchButton.classList.remove("bg-black");
   $searchButton.classList.add("bg-[#FFD15B]");
@@ -31,9 +24,11 @@ export const searchBar = (recipes, $searchInput, $searchButton, cardsContainer) 
 
     if (isRecipeName || isRecipeDescription || isRecipeIngredient) {
       results.push(recipe);
+      console.log(recipe);
     }
     i++;
   }
 
+  console.log(results);
   return results;
 };

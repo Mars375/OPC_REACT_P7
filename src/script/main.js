@@ -37,12 +37,20 @@ export class App {
 
   setupSearchListener() {
     this.$searchInput.addEventListener("keyup", () => {
-      const dataToUse = this.filteredRecipes && this.filteredRecipes.length > 0 ? this.filteredRecipes : this.recipes;
-      this.searchedRecipes = searchBar(dataToUse, this.$searchInput, this.$searchButton, this.$cardsContainer);
+      // If the search value is empty or less than 3, return the recipes array.
+      const searchValue = this.$searchInput.value.trim().toLowerCase();
+      if (searchValue.length < 3 || searchValue === "") {
+        this.$searchButton.classList.remove("bg-[#FFD15B]");
+        this.$searchButton.classList.add("bg-black");
+        this.searchedRecipes = this.recipes
+      } else {
+        const dataToUse = this.filteredRecipes && this.filteredRecipes.length > 0 ? this.filteredRecipes : this.recipes;
+        this.searchedRecipes = searchBar(dataToUse, searchValue, this.$searchButton, this.$cardsContainer);
+      }
       this.dropdowns.forEach((dropdown) => {
         dropdown._searchedRecipes = this.searchedRecipes
+        dropdown.renderTagsAndCards()
       });
-      this.renderPage();
       updateDropdowns(this.dropdowns, this.searchedRecipes);
     });
   }
