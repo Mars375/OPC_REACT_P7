@@ -24,7 +24,6 @@ export const searchBar = (recipes, searchValue, $searchButton, cardsContainer) =
 
     if (isRecipeName || isRecipeDescription || isRecipeIngredient) {
       results.push(recipe);
-      console.log(recipe);
     }
     i++;
   }
