@@ -1,45 +1,63 @@
 import { Query } from "./helpers/Query.js";
 import { Loader } from "./components/Loader.js";
-import { renderDropdowns } from "./utils/renderDropdowns.js";
-import { renderTotalRecipes } from "./utils/renderTotalRecipes.js";
-import { renderCards } from "./utils/renderCards.js";
+import { renderCardsAndTotal, renderDropdowns, searchBar, updateDropdowns } from "./utils/index.js";
 
-class App {
+export class App {
   constructor() {
-    this.recipes = [];
-    this.ingredients = [];
-    this.appliances = [];
-    this.ustensils = [];
     this.$searchInput = document.querySelector("#search-input");
     this.$searchButton = document.querySelector("#search-button");
     this.$dropdownContainer = document.querySelector("#dropdowns-container");
-    this.$totalRecipes = document.querySelector("#total-recipes");
     this.$cardsContainer = document.querySelector("#cards-container");
+
+    this.filteredRecipes;
+    this.searchedRecipes;
+    this.appInstance = this;
+    this.dropdowns
+
     this.init();
   }
 
   async init() {
-    await this.getData();
-    this.renderPage();
+    await this.loadData();
+    this.setupSearchListener();
+    this.setupLoader();
   }
 
-  async getData() {
+  async loadData() {
     this.recipes = await Query.getRecipes();
-    this.ingredients = await Query.getIngredients();
-    this.appliances = await Query.getAppliances();
-    this.ustensils = await Query.getUstensils();
+
+    this.renderPage();
+    this.dropdowns = renderDropdowns(this.$dropdownContainer, this.recipes, this.$cardsContainer, this.appInstance);
   }
 
   renderPage() {
-    renderDropdowns(this.$dropdownContainer, this.ingredients, this.appliances, this.ustensils);
-    renderTotalRecipes(this.recipes.length, this.$totalRecipes);
-    renderCards(this.recipes, this.$cardsContainer);
-
-    setTimeout(() => {
-      Loader.hide();
-    }, 1500);
+    const recipesToRender = this.searchedRecipes ? this.searchedRecipes : this.recipes;
+    renderCardsAndTotal(recipesToRender, this.$cardsContainer, this.$searchInput);
   }
 
+  setupSearchListener() {
+    this.$searchInput.addEventListener("keyup", () => {
+      // If the search value is empty or less than 3, return the recipes array.
+      const searchValue = this.$searchInput.value.trim().toLowerCase();
+      if (searchValue.length < 3 || searchValue === "") {
+        this.$searchButton.classList.remove("bg-[#FFD15B]");
+        this.$searchButton.classList.add("bg-black");
+        this.searchedRecipes = this.recipes
+      } else {
+        const dataToUse = this.filteredRecipes && this.filteredRecipes.length > 0 ? this.filteredRecipes : this.recipes;
+        this.searchedRecipes = searchBar(dataToUse, searchValue, this.$searchButton, this.$cardsContainer);
+      }
+      this.dropdowns.forEach((dropdown) => {
+        dropdown._searchedRecipes = this.searchedRecipes
+        dropdown.renderTagsAndCards()
+      });
+      updateDropdowns(this.dropdowns, this.searchedRecipes);
+    });
+  }
+
+  setupLoader() {
+    Loader.hide()
+  }
 }
 
 new App();
